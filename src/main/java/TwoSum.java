@@ -25,9 +25,21 @@ public class TwoSum {
 
     public void TwoSumsolution(int[] arr, int target) {
         HashMap<Integer, Integer> a = new HashMap<Integer, Integer>();
-        for (int i = 0; i < arr.length; i++) {
-            a.put(i, arr[i]);
-        }
+//        for (int i = 0; i < arr.length; i++) {
+//            a.put(i, arr[i]);
+//        }
+//        for (int i = 0; i < arr.length; i++) {
+//            int res = target - arr[i];
+//            if (a.containsValue(res) && a.get(res) != i) {
+//                System.out.println("存在");
+//                flag = 1;
+//                break;
+//            }
+//        }
+        /**
+         * 解法2，for循环可以合并。合并后相当于倒推
+         */
+
         for (int i = 0; i < arr.length; i++) {
             int res = target - arr[i];
             if (a.containsValue(res) && a.get(res) != i) {
@@ -35,7 +47,10 @@ public class TwoSum {
                 flag = 1;
                 break;
             }
+            a.put(i, arr[i]);//后面是能找到对应的数据的
         }
+
+
         if (flag == 0) {
             System.out.println("不存在");
         }
