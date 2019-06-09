@@ -26,20 +26,23 @@ public class StringtoInteger {
      * @param args
      */
     public static void main(String[] args) {
-        String str = "   -42";
+        String str = "   -91283472332";
         StringtoInteger l = new StringtoInteger();
         int out = l.myAtoi(str);
         System.out.println(out);
     }
 
-    private int  myAtoi(String str) {
+    private int  myAtoi(String s) {
+        String str = s.trim();//去除左右空格
         if (str.isEmpty()) return 0;
         int sign = 1, base = 0, i = 0, n = str.length();
-        while (i < n && str.charAt(i) == ' ') ++i;
+        //判断符号位
         if (i < n && (str.charAt(i) == '+' || str.charAt(i) == '-')) {
             sign = (str.charAt(i++) == '+') ? 1 : -1;
         }
         while (i < n && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+
+            //超出最大范围
             if (base > Integer.MAX_VALUE / 10 || (base == Integer.MAX_VALUE / 10 && str.charAt(i) - '0' > 7)) {
                 return (sign == 1) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
             }
