@@ -34,6 +34,7 @@ public class LongestPalindromicSubstring {
     private String method3(String s) {
         if (s.length() <= 1)
             return s;//表示字符串中无回文子串
+
         for (int i = s.length(); i > 0; i--) {//子串长度
             for (int j = 0; j <= s.length() - i; j++) {
                 String sub = s.substring(j, i + j);//子串位置
@@ -85,28 +86,35 @@ public class LongestPalindromicSubstring {
     }
 
     /**
-     * 其中 dp[i][j] 表示字符串区间 [i, j] 是否为回文串，当 i = j 时，只有一个字符，肯定是回文串，如果 i = j + 1，说明是相邻字符，此时需要判断 s[i] 是否等于 s[j]，如果i和j不相邻，即 i - j >= 2 时，除了判断 s[i] 和 s[j] 相等之外，dp[i + 1][j - 1] 若为真，就是回文串，通过以上分析，可以写出递推式如下：
-     * <p>
-     * dp[i, j] = 1                                               if i == j
-     * <p>
-     * = s[i] == s[j]                                if j = i + 1
-     * <p>
-     * = s[i] == s[j] && dp[i + 1][j - 1]    if j > i + 1
-     * <p>
-     * 这里有个有趣的现象就是如果我把下面的代码中的二维数组由 int 改为 vector<vector> 后，就会超时，这说明 int 型的二维数组访问执行速度完爆 std 的 vector 啊，所以以后尽可能的还是用最原始的数据类型吧。
-     *
-     * @param s
-     * @return
+     * 其中 dp[i][j] 表示字符串区间 [i, j] 是否为回文串，当 i = j 时，只有一个字符，肯定是回文串
+     * 如果 i = j + 1，说明是相邻字符，此时需要判断 s[i] 是否等于 s[j]
+     * 如果i和j不相邻，即 i - j >= 2 时，除了判断 s[i] 和 s[j] 相等之外，dp[i + 1][j - 1] 若为真，就是回文串，通过以上分析，可以写出递推式如下：
+     有dp关系式：
+
+     dp[i, j] = 1                                               if i == j
+
+     = s[i] == s[j]                                if j = i + 1
+
+     = s[i] == s[j] && dp[i + 1][j - 1]    if j > i + 1
+     * 这里有个有趣的现象就是如果把下面的代码中的二维数组由 int 改为 vector<vector> 后，就会超时，
+     * 这说明 int 型的二维数组访问执行速度完爆 std 的 vector 啊，所以以后尽可能的还是用最原始的数据类型吧。
      */
     private String method1(String s) {
         if (s.isEmpty()) return "";
         boolean dp[][] = new boolean[s.length()][s.length()];
         int left = 0, right = 0, len = 0;
+
         for (int i = 0; i < s.length(); ++i) {
             dp[i][i] = true;
-            for (int j = 0; j < i; ++j) {
-                dp[j][i] = (s.charAt(i) == s.charAt(j) && (i - j < 2 || dp[j + 1][i - 1]));
-                if (dp[j][i] && len < i - j + 1) {
+            for (int j = 0; j < i; ++j) {//由于对称性只用计算上三角
+                if (j == i + 1 && s.charAt(i) == s.charAt(j)) {
+                    dp[j][i] = true;
+                }
+                if (j > i + 1) {
+                    dp[j][i] = (s.charAt(i) == s.charAt(j) && (i - j < 2 || dp[j + 1][i - 1]));
+                }
+
+                if (dp[j][i] && len < i - j + 1) {//记录索引，与最大字字符串
                     len = i - j + 1;
                     left = j;
                     right = i;
