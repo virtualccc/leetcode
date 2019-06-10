@@ -91,9 +91,9 @@ public class LongestPalindromicSubstring {
      * 如果i和j不相邻，即 i - j >= 2 时，除了判断 s[i] 和 s[j] 相等之外，dp[i + 1][j - 1] 若为真，就是回文串，通过以上分析，可以写出递推式如下：
      有dp关系式：
 
-     dp[i, j] = 1                                               if i == j
+     dp[i, j] = 1                          if i == j
 
-     = s[i] == s[j]                                if j = i + 1
+     = s[i] == s[j]                        if j = i + 1
 
      = s[i] == s[j] && dp[i + 1][j - 1]    if j > i + 1
      * 这里有个有趣的现象就是如果把下面的代码中的二维数组由 int 改为 vector<vector> 后，就会超时，
@@ -107,12 +107,9 @@ public class LongestPalindromicSubstring {
         for (int i = 0; i < s.length(); ++i) {
             dp[i][i] = true;
             for (int j = 0; j < i; ++j) {//由于对称性只用计算上三角
-                if (j == i + 1 && s.charAt(i) == s.charAt(j)) {
-                    dp[j][i] = true;
-                }
-                if (j > i + 1) {
-                    dp[j][i] = (s.charAt(i) == s.charAt(j) && (i - j < 2 || dp[j + 1][i - 1]));
-                }
+//               s.charAt(i) == s.charAt(j) 必须满足，  当 i = j+1时，说明相邻则是回文，
+//                i>j+1时，说明长度大于2，需要判断dp[j + 1][i - 1]是否是回文
+                dp[j][i] = s.charAt(i) == s.charAt(j) && ((i - j == 1) ||  (i - j > 1) && dp[j + 1][i - 1]);
 
                 if (dp[j][i] && len < i - j + 1) {//记录索引，与最大字字符串
                     len = i - j + 1;
