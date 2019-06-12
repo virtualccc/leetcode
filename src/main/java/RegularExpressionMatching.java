@@ -36,8 +36,8 @@ public class RegularExpressionMatching {
 
 
     public static void main(String[] args) {
-        String s = "abfdafsad";
-        String p = ".*";
+        String s = "adaaf";
+        String p = "a*";
 //        System.out.println(s.substring(1));//从1开始截取
 
         RegularExpressionMatching l = new RegularExpressionMatching();
@@ -47,6 +47,9 @@ public class RegularExpressionMatching {
 
 
     /**
+     * .和*，前者也可以匹配任意字符
+     * 后者可以重复前一个字符0～多次。
+     *
      * 这道题中的表示之前那个字符可以有0个，1个或是多个，就是说，字符串ab，可以表示b或是aaab，即a的个数任意，这道题的难度要相对之前那一道大一些，分的情况的要复杂一些，需要用递归Recursion来解，大概思路如下：
      *
      * - 若p为空，若s也为空，返回true，反之返回false。
@@ -67,13 +70,20 @@ public class RegularExpressionMatching {
         if (p.length() == 1) {
             return (s.length() == 1 && (s.charAt(0) == p.charAt(0) || p.charAt(0) == '.'));
         }
-
+//        若p的第二个字符不为*，若此时s为空返回false，否则判断首字符是否匹配，且从各自的第二个字符开始调用递归函数匹配。
         if (p.charAt(1) != '*') {
             if (s.length() == 0) {
                 return false;
             }
+            //要么首字母相同，要么匹配中第一个为.     然后截取第1位字符后所有字符递归判断
             return (s.charAt(0) == p.charAt(0) || p.charAt(0) == '.') && isMatch(s.substring(1), p.substring(1));
         }
+
+//        若p的第二个字符为*，进行下列循环，
+//        条件是若s不为空且首字符匹配（包括p[0]为点），
+//        调用递归函数匹配s和去掉前两个字符的p（这样做的原因是假设此时的星号的作用是让前面的字符出现0次，验证是否匹配），若匹配返回true
+//        否则s去掉首字母（因为此时首字母匹配了，我们可以去掉s的首字母，而p由于星号的作用，可以有任意个首字母，所以不需要去掉），
+//        继续进行循环。
         while (s.length() != 0 && (s.charAt(0) == p.charAt(0) || p.charAt(0) == '.')) {
             if (isMatch(s, p.substring(2))) {
                 return true;
