@@ -20,6 +20,24 @@ public class ContainerWithMostWater {
         
     }
 
+    private int maxArea(int[] arr) {
+        int left = 0, right = arr.length-1, res = 0;
+        while (left != right) {
+            if (arr[left] < arr[right]) {
+                res = arr[left]*(right-left)>res?arr[left]*(right-left):res;
+                left++;
+            }
+            if (arr[left] > arr[right]) {
+                res = arr[right]*(right-left)>res?arr[right]*(right-left):res;
+                right--;
+            }
+        }
+        return res;
+    }
+
+
+
+
     /**
      * 线之间形成的区域总是受限于短线的高度。此外，线越远，所获得的区域就越多。
      * 我们使用两个指针，一个在开头，一个在数组末尾，构成行长度。此外，
@@ -28,23 +46,6 @@ public class ContainerWithMostWater {
      * 因为木桶原理，容积取决于行长度和最短高度的积，所以，两个端点高度较低的需要移动，
      * 因为高度较高的移动不可能大于原来的两端点积。这样，每次都是高度低的移动
      * ，直到两指针相邻。
-     * @param height
-     * @return
      */
-    private int maxArea(int[] height) {
-        int i=0,j=height.length-1;
-        int max=0;
-        while(i!=j){
-            if(height[i]<height[j]){//木桶原理，总是小木板是盛水的标志
-                max=height[i]*(j-i)>max?height[i]*(j-i):max;
-                i++;
-            }
-            if(height[i]>height[j]){
-                max=height[j]*(j-i)>max?height[j]*(j-i):max;
-                j--;
-            }
-        }
-        return max;
 
-    }
 }
